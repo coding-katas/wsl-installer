@@ -1,0 +1,114 @@
+# LSW Inno Setup Installer
+
+Installateur Inno Setup, utilisé par [LSW](https://gitlab.tech.orange/getting-started/work-environment/lsw-projects/lsw).
+
+Un installateur Inno Setup est généré par une pipeline déclenchée à partir de [WSL RootFS builder](https://gitlab.tech.orange/getting-started/work-environment/lsw-projects/building-space/wsl-rootfs-builder).
+
+L'installateur permet de déployer l'environnement [LSW](https://gitlab.tech.orange/getting-started/work-environment/lsw-projects/lsw), et d'installer un socle Ubuntu sous WSL 2.
+
+[Differentes versions peuvent être téléchargée sur Artifcatory](https://artifactory.si.francetelecom.fr/artifactory/dom-oasis-generic/LSW/Installer/PFC/master/).
+
+## Sommaire
+
+- [LSW Inno Setup Installer](#lsw-inno-setup-installer)
+  - [Sommaire](#sommaire)
+  - [Compilation](#compilation)
+    - [Paramètres Inno Setup](#paramètres-inno-setup)
+    - [Syntaxe](#syntaxe)
+  - [Mémos](#mémos)
+    - [Compilation manuelle sous Windows](#compilation-manuelle-sous-windows)
+      - [Création de l'archive WSL _(sous WSL)_](#création-de-larchive-wsl-sous-wsl)
+      - [Création manuelle de l'installateur Inno Setup _(sous WSL et Windows)_](#création-manuelle-de-linstallateur-inno-setup-sous-wsl-et-windows)
+
+## Compilation
+
+### Paramètres Inno Setup
+
+
+|        Paramètre        |  Type  |             Valeur par défaut             |     Valeurs possibles     | Description                                                  |
+| :---------------------: | :----: | :---------------------------------------: | :-----------------------: | :----------------------------------------------------------- |
+|    InstallerVersion     | String |                   1.0.0                   |             -             | Définit la version de l'installateur                         |
+|       LSW_VERSION       | String |                   0.0.0                   |             -             | Définit la version de LSW au moment de la génération         |
+|     DISTRO_VERSION      | String |                   20.04                   |      20.04 \| 22.04       | Définit la version de la distribution Ubuntu                 |
+|      ROOTFS_ORIGIN      | String |                  docker                   | docker \| vdi \| cloudimg | Définit l'origine de l'archive WSL à utiliser                |
+|       ENTITY_NAME       | String |                    PFC                    |             -             | Définit le nom de l'entité                                   |
+|     WSL_DISTRO_NAME     | String | WSL-Ubuntu-`DISTRO_VERSION`-`ENTITY_NAME` |             -             | Définit le nom de la distribution WSL                        |
+|     BRANCH_LSW_REPO     | String |                  master                   |             -             | Définit le nom de la branche GitLab du projet LSW à utiliser |
+|   BRANCH_ENTITY_REPO    | String |                  master                   |             -             | Définit le nom de la branche GitLab du projet lié à l'entité |
+|    ENTITY_REPO_PATH     | String |                     -                     |             -             | Définit le host GitLab du projet lié à l'entité              |
+| ENTITY_REPO_GITLAB_HOST | String |        gitlab.si.francetelecom.fr         |             -             | Définit l'arborescence GitLab du projet lié à l'entité       |
+|       DevelopMode       | String |                    no                     |         yes \| no         | Active le mode **DebugMode** lors de l'installation          |
+
+### Syntaxe
+
+```powershell
+& 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' "/DWSL_DISTRO_NAME=WSL-Ubuntu-20.04-PFC" "/DDISTRO_VERSION=20.04" "/DBRANCH_LSW_REPO=develop" "/DENTITY_NAME=PFC" "/DBRANCH_ENTITY_REPO=develop" "/DENTITY_REPO_PATH=infrastructure-services/service-common-tools/lsw-hagndaas-environment" .\main.iss
+```
+
+## Mémos
+
+### Compilation manuelle sous Windows
+
+#### Création de l'archive WSL _(sous WSL)_
+
+```bash
+gitgetting
+cd work-environment/lsw-projects/building-space/wsl-rootfs-builder/
+
+# Branche LSW à utiliser
+export BRANCH_LSW_REPO="master"
+# Jeton Artifactory
+export ARTIFACTORY_REGISTRY_API_KEY=${ARTIFACTORY_REGISTRY_API_KEY}
+```
+
+```bash
+# Archive Ubuntu 20.04 (archive pour HagnDAAS utilisant la branche develop)
+time ./build.sh --version 20.04 --source docker --build --rootfs --entity HagnDAAS,infrastructure-services/service-common-tools/lsw-hagndaas-environment,develop
+
+real	27m47.739s
+user	9m29.962s
+sys	0m38.586s
+```
+
+Puis on copie l'archive générée sous Windows, dans le dossier qui sera utilisé par Inno Setup :-)
+
+```bash
+mkdir -pv /mnt/c/My\ Program\ Files/innosetup-wsl-installer/files/
+rm -fv /mnt/c/My\ Program\ Files/innosetup-wsl-installer/files/wsl-ubuntu-*.tar.gz
+cp -uv complete/wsl-ubuntu-*.tar.gz /mnt/c/My\ Program\ Files/innosetup-wsl-installer/files/
+```
+
+:point_right: Documentation concernant [WSL RootFS Builder](https://gitlab.tech.orange/getting-started/work-environment/lsw-projects/building-space/wsl-rootfs-builder).
+
+#### Création manuelle de l'installateur Inno Setup _(sous WSL et Windows)_
+
+A partir de WSL, on copie le dépôt [LSW Inno Setup installer](https://gitlab.tech.orange/getting-started/work-environment/lsw-projects/building-space/lsw-innosetup-installer).
+
+```bash
+rsync -av --exclude=.git --exclude=.gitkeep --exclude=.tox ${GETTING_STARTED_PATH}/work-environment/lsw-projects/building-space/lsw-innosetup-installer/ /mnt/c/My\ Program\ Files/innosetup-wsl-installer/
+```
+
+Dans le cas d'une personnalisation, il faut aussi copier le dépôt de l'entité concernée. Dans l'exemple il s'agit de HagnDAAS.
+
+```bash
+mkdir -p /mnt/c/My\ Program\ Files/innosetup-wsl-installer/entities/hagndaas/
+rsync -av --exclude=.git --exclude=.gitkeep --exclude=.tox ${GETTING_STARTED_PATH}/work-environment/lsw-projects/lsw-hagndaas-environment/ /mnt/c/My\ Program\ Files/innosetup-wsl-installer/entities/hagndaas/
+```
+
+Maintenant, sous Windows, on ouvre une console PowerShell et on lance la création de l'installateur avec Inno Setup.
+
+A l'aide de la combinaison de touches `WIN + R`, vous tapez `powershell`, et vous copier/coller ceci.
+
+```powershell
+cd 'C:\My Program Files\innosetup-wsl-installer\'
+
+# Exemple pour générer un installateur pour la PFC
+& 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' "/DWSL_DISTRO_NAME=WSL-Ubuntu-20.04-PFC" "/DDISTRO_VERSION=20.04" "/DBRANCH_LSW_REPO=develop" "/DDebugMode=yes" "/DENTITY_NAME=PFC" "/DLSW_VERSION=3.29.0-a1" .\main.iss
+
+# Exemple pour générer un installateur pour HagnDAAS (PFC + composants additionnels pour HangDAAS)
+& 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' "/DWSL_DISTRO_NAME=WSL-Ubuntu-20.04-HagnDAAS" "/DDISTRO_VERSION=20.04" "/DBRANCH_LSW_REPO=master" "/DDebugMode=yes" "/DENTITY_NAME=HagnDAAS"  "/DLSW_VERSION=3.23.0" "/DInstallerVersion=2.10.2" "/DBRANCH_ENTITY_REPO=master" "/DENTITY_REPO_PATH=infrastructure-services/service-common-tools/lsw-hagndaas-environment" "/DENTITY_REPO_GITLAB_HOST=gitlab.si.francetelecom.fr" .\main.iss
+
+# OU
+
+& 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' "/DWSL_DISTRO_NAME=WSL-Ubuntu-20.04-HagnDAAS" "/DDISTRO_VERSION=20.04" "/DBRANCH_LSW_REPO=develop" "/DDebugMode=yes" "/DENTITY_NAME=HagnDAAS"  "/DLSW_VERSION=3.22.3-a2" "/DBRANCH_ENTITY_REPO=develop" "/DENTITY_REPO_PATH=infrastructure-services/service-common-tools/lsw-hagndaas-environment" "/DENTITY_REPO_GITLAB_HOST=gitlab.si.francetelecom.fr" .\main.iss
+```

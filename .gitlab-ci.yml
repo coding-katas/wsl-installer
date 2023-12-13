@@ -1,0 +1,39 @@
+---
+variables:
+  CICD_TAG: diod
+
+include:
+  - project: 'infrastructure-services/service-templates/ci-cd'
+    ref: diod
+    file: '.gitlab-ci.yml'
+    rules:
+      - if: $CI_SERVER_HOST =~ /\b(gitlab.si.francetelecom.fr)\b/
+  - project: 'getting-started/work-environment/lsw-projects/building-space/ci/ci-cd'
+    ref: diod
+    file: '.gitlab-ci.yml'
+    rules:
+      - if: $CI_SERVER_HOST =~ /\b(gitlab.tech.orange)\b/
+
+💿 tests:installer:
+  extends:
+    - .tags:noprod
+    - .artifacts_common
+  image:
+    name: '${BUILD_TEST_IMAGE}'
+  stage: 🦄 tests
+  script:
+    - ./build.sh --test-innosetup
+
+💿 build:installer:lsw:
+  extends:
+    - .tags:noprod
+    - .artifacts_common
+  image:
+    name: '${BUILD_TEST_IMAGE}'
+  stage: 📦 build
+  rules:
+    - if: $CI_PIPELINE_SOURCE =~ /\b(schedule|trigger)\b/ && $DISTRO_VERSION =~ /\b(20.04|22.04)\b/
+      when: always
+    - when: never
+  script:
+    - ./build.sh --build-installer

@@ -1,0 +1,297 @@
+v0.13.3 (2022-11-06)
+--------------------
+* Fix addition cases where comment not loaded from .pub files.
+* Fix some dialogs hidden when *View > Always on top* enabled in KeePass.
+* Fix compatibility with PuTTY private keys with non-ASCII passphrases.
+* Fix bad private key format for ED25519 keys.
+
+v0.13.2 (2022-09-25)
+--------------------
+* Clarify WSL1-only support.
+* Fix Add Key > From File... in Manage KeeAgent dialog.
+* Fix comment not loaded from .pub file in some cases.
+* Fix crash when process disappears before connecting to Windows OpenSSH agent (thanks Samuel D. Leslie).
+
+v0.13.1 (2022-07-17)
+--------------------
+* Update help URLs
+* Bump minimum required .NET version to 4.6.2.
+* Add support for PuTTY Private Key (.ppk) v3 file format (thanks ezekielnewren).
+* Add support for WSL compatible ssh-agent socket (thanks mehrdadn).
+* Improve user interface for managing key files.
+* Fix multiple requests received when database is locked (thanks archimed7592).
+* Fix blocking UI when decrypting keys with CPU intensive KDF.
+* Add support for OpenSSH destination constraints.
+
+v0.12.1 (2020-08-31)
+--------------------
+* Fix crash when opening Group menu when no database open (thanks Mike Myers)
+
+v0.12.0 (2020-05-16)
+--------------------
+* No changes since Beta v0.11.4.
+
+Beta v0.11.4 (2020-03-27)
+-------------------------
+* Fix blank menu item in Group menu.
+* Fix blank menu item in Entry menu (URL menu item is moved).
+
+Beta v0.11.3 (2019-10-07)
+-------------------------
+* Fix failing to save private key to file on Windows
+* Show warning message when saving private key to file fails
+* Fix blank URL menu item in context menu for items with SSH key
+
+Beta v0.11.2 (2019-09-16)
+-------------------------
+* Fix .plgx not loading on mono because of .NET runtime version
+* Fix crash during load on mono
+
+Beta v0.11.1 (2019-09-10)
+-------------------------
+* Fix compatibility with KeePass 2.43
+
+Beta v0.11.0 (2019-03-08)
+-------------------------
+* Add support for SHA-256 and SHA-512 RSA key signing
+* Fix deletion of temporary key file when key is unloaded
+* Fix setting unix file permissions when saving temporary key file
+
+v0.10.1 (2018-04-12)
+--------------------
+* Fix layout of agent lock/unlock passphrase dialog
+* Fix compatibility with KeePass 2.39
+
+v0.10.0 (2018-04-11)
+--------------------
+* No changes since v0.9.3
+
+Beta v0.9.3 (2018-01-25)
+------------------------
+* Add context menu to Key Manager
+* Fix some keys failing to load when using mono --verify-all
+
+Beta v0.9.2 (2017-12-20)
+------------------------
+* Add support for aes256-ctr cipher in OpenSSH private key files
+* Experimental support for Windows OpenSSH
+* Additional error message when key fails to load
+
+Beta v0.9.1 (2017-03-06)
+------------------------
+* Fix some high DPI scaling issues on Windows
+* Fix some layout issues on Mono
+* Fix loading keys larger than 4096 bytes into Pageant
+* Ignore keys in Recycle Bin when closing/locking database
+* Add password group context menu item for loading all keys in a group
+* Fix each URL being run multiple times when multiple keys are selected
+
+Beta v0.9.0 (2017-01-18)
+------------------------
+* Change keyboard shortcuts to use "M" instead of "L"
+* Fix lifetime checkbox not working (thanks Matthew Rhoten)
+* KeePass window moves to bottom z-order after picking a key
+* Confirmation dialog is system modal (thanks Alan Reyes)
+* New option to ignore missing key files (thanks Alan Reyes)
+* Can now use environment variables in key file path (thanks Alan Reyes)
+* Rearrange columns in KeeAgent manager
+
+v0.8.1 (2016-07-28)
+-------------------
+* Fixed incorrect assembly version
+
+v0.8.0 (2016-07-28)
+-------------------
+* Close key manager dialog when ESC is pressed
+* Add margins in key manager dialog
+
+Beta v0.7.12 (2016-03-21)
+-------------------------
+* Change keyboard shortcuts to use "L" instead of "K".
+* Confirm constraint checkbox in "Edit Entry" dialog is not shown when global
+  confirmation option is enabled.
+* Key picker dialog is activated when shown and can now use arrow keys and
+  enter key to pick a key without having to use mouse or tab.
+* Extend socket timeout from 2 seconds to 5 seconds.
+* Fix Agent Manager dialog buttons not all visible on Mono.
+* Fix Unix Agent mode not working on newer versions of OpenSSH with multiple
+  connections (concurrent agent socket connections).
+
+Beta v0.7.11 (2015-11-08)
+-------------------------
+* Add workaround for ruby net-ssh.
+
+Beta v0.7.10 (2015-11-04)
+-------------------------
+* Fix "Failed to start Unix Agent: Access Denied" error when starting KeePass
+  with KeeAgent in Agent mode on Linux.
+
+Beta v0.7.9 (2015-11-02)
+------------------------
+* Fix error when starting for the first time on Linux without an external ssh
+  agent.
+* Fix constraints and agent manager buttons not working in Agent mode on Linux.
+
+Beta v0.7.8 (2015-10-22)
+------------------------
+* Fix crash when using Cygwin/MSYS sockets.
+
+Beta v0.7.7 (2015-10-16)
+------------------------
+* Support for Agent mode on Linux/OS X.
+
+Beta v0.7.6 (2015-09-21)
+------------------------
+* Add support for ECDSA and ED25519 keys in PuTTY Private Key (.ppk) files.
+  Thanks to @angelsl for implementing this!
+* Better error message when running in Client Mode and the external SSH agent
+  is not running.
+* Double-clicking a row in the new key selection feature will now select that
+  key and close the dialog.
+* Attempt to use the same passphrase when loading multiple keys from external
+  files.
+
+Beta v0.7.5 (2015-07-23)
+------------------------
+* Fix deadlock when using OpenSSH >= v6.8.p1 in Cygwin.
+
+Beta v0.7.4 (2015-07-10)
+------------------------
+* Add feature to allow selection of key when client program requests a list
+  of all keys (Agent mode only).
+
+Beta v0.7.3 (2015-07-10)
+------------------------
+* Fix Ed25519 keys not working in Client Mode.
+
+Beta v0.7.2 (2015-07-09)
+------------------------
+* Add support for displaying information about the requesting client program
+  in the confirmation dialog and the balloon notification for cygwin/msys
+  sockets.
+* Silently overwrite cygwin/msys socket files if they already exist. Will not
+  overwrite other types of files.
+
+Beta v0.7.1 (2015-06-06)
+------------------------
+* Add support for displaying information about the requesting client program
+  in the confirmation dialog and the balloon notification. Note: this only
+  works for PuTTY compatilble programs, not cygwin/msys.
+
+Beta v0.7.0 (2015-06-05)
+------------------------
+* Add support for "new" Openssh private key file format that was introduced in
+  Openssh v6.5.
+* Add support for Ed25519 keys (also introduced in Openssh v6.5).
+
+v0.6.3 (2015-04-23)
+-------------------
+* Fix "Unexpected error" when using KeeAgent in client mode with Pageant on
+  Windows.
+
+v0.6.2 (2015-04-14)
+-------------------
+* Fix keys not loading automatically when database is opened.
+
+v0.6.1 (2015-04-12)
+-------------------
+* Fix inverted Yes/No buttons on error dialog when loading key on database
+  opening. Thanks to LeoVorto for fixing this.
+* Fix unexpected error when unlocking a database while the ssh agent is locked.
+
+v0.6.0 (2015-02-14)
+-------------------
+* Cygwin/MSYS socket file text box and browse button are disabled when the
+  checkbox is not checked.
+
+Beta v0.5.4 (2014-11-18)
+------------------------
+* Add password entry list column to indicate SSH key status.
+* Add keyboard shortcut for loading key from selected entries.
+* Add per-entry lifetime constraint settings.
+* Add browse buttons for selecting Cygwin/MSYS socket files.
+* Allow use of environment variables in Cygwin/MSYS socket file path.
+* Restrict permissions of Cygwin/MSYS socket file to current user only.
+
+Beta v0.5.3 (2014-10-13)
+------------------------
+* Fix entries in the recycle bin are loaded at start when they should be ignored.
+* More informative error messages when key fails to load.
+* Add column to agent manager that shows where the key came from.
+* Add support for Cygwin/MSYS integration
+
+Beta v0.5.2 (2014-7-24)
+-----------------------
+* Fix issue with DSA authentication failing ~1% of the time because of signature
+  length less than 40 bytes
+
+Beta v0.5.1 (2014-5-5)
+----------------------
+* Fix issue with public key info not loading in Entry Settings on Mono
+* Add feature to get key comment for OpenSSH keys
+
+Beta v0.5.0 (2014-04-22)
+------------------------
+* "Unlock Database On SSH Activity" from database settings to global options
+* Fix Entry Settings form can close in invalid state in Mono
+* Add SSH key info to KeeAgent tab of Entry Settings dialog (Known issue: does
+  not update correctly in Mono)
+* Add confirm constraint option to individual entries
+* Add option to save key file to temporary file for use by external programs
+* KeeAgent settings are now stored in a binary attached to each entry instead
+  of in a string (Important: settings will be lost if you downgrade KeeAgent)
+* Expired entries are no longer automatically loaded
+* Add placeholders for accessing key files
+
+v0.4.1 (2013-08-07)
+-------------------
+* Fix Help links
+
+v0.4.0 (2013-08-07)
+-------------------
+* Runs on Linux and Mac (client mode only)
+* Fix does not work with PuTTY <=0.60
+* Fix ppk file not able to load when it has extended characters in the comment
+* New Client mode - allows keys from KeePass to be loaded into an external SSH
+  agent such as Pageant
+* Added context help links to website
+* Supports SSH1 keys - Thank you to maxlaverse for this! 
+* Supports SSH2 ECDSA keys
+* Supports OpenSSH key file format
+* Supports loading keys from external files
+* Supports selectively loading keys
+* Supports automatically loading/unloading keys on database lock/unlock
+* Supports requesting to unlock database when key is requested from client
+* Supports locking/unlocking agent separately from databases
+* Supports most ssh-add commands
+* Supports confirm and lifetime constraints
+
+v0.2.0 (2012-10-13)
+-------------------
+* Added user notification options
+* Fixed non-ascii characters in passphrase not working
+* Fixed lockup when used in conjunction with IOProtocolExt
+
+
+v0.1.5 (2012-06-16)
+-------------------
+* Fixed broken update notification
+* Added support for multiple simultaneous databases
+* Improved error message for bad key files
+* Now ignores entries in Recycle Bin
+
+
+v0.1.4 (2012-05-26)
+-------------------
+* Fixed compatibility with KeePass 2.17
+
+
+v0.1.3 (2012-05-25)
+-------------------
+* Fixed bug where DSA keys larger than 1024bits and some RSA keys
+  did not work.
+
+
+v0.1.2 (2012-05-08)
+-------------------
+* Initial public release.
